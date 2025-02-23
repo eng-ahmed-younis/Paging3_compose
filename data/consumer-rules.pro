@@ -1,0 +1,2 @@
+-keep class com.chuckerteam.chucker.** { *; }
+-keep class com.chuckerteam.chucker.internal.** { *; }
