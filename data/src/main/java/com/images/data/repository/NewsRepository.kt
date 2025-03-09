@@ -17,9 +17,13 @@ class NewsRepositoryImpl @Inject constructor(private val newsApiService: NewsSer
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun getArticlesPagingSource() : Flow<PagingData<Article>> {
+        /**
+         * When the Pager needs to load data, it invokes the [pagingSourceFactory],
+         * which creates a [NewsPagingSource] instance.
+         * */
         return Pager(
             config = PagingConfig(
-                pageSize = 10,
+                pageSize = 2,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = { NewsPagingSource(newsApiService) }

@@ -9,7 +9,7 @@ fun List<ArticleDto>.toArticleList(): List<Article>  {
         Article(
             author = it.author ?: "",
             content = it.content,
-            description = it.description,
+            description = it.description ?: "",
             title = it.title,
             url = it.url
         )

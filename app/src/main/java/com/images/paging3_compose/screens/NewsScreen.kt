@@ -12,18 +12,36 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.images.entity.Article
+import com.innovitics.app.shift.core.components.paging.GenericPagerCompose
 
 @Composable
 fun NewsScreen(
     modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<NewsViewModel>()
-    val articles = viewModel.articles.collectAsLazyPagingItems()
+    //  val articles = viewModel.articles.collectAsLazyPagingItems()
     LaunchedEffect(Unit) {
         viewModel.getBreakingNews()
     }
 
-    LazyColumn(modifier = modifier) {
+
+    GenericPagerCompose(
+        pagingData = viewModel.articles,
+        itemContent = { article ->
+            NewsItem(article = article)
+        },
+        modifier = Modifier.fillMaxSize(),
+        loadingContent = {
+            LoadingIndicator("Refreshing News...")
+        },
+        errorContent = { message, onRetry ->
+            ErrorItem(message = message, onRetry = onRetry)
+        }
+    )
+
+
+    /*  LazyColumn(modifier = modifier) {
         items(articles.itemCount) { article ->
             NewsItem(title = articles[article]?.title ?: "", index = article.toString())
         }
@@ -42,14 +60,14 @@ fun NewsScreen(
             else -> {}
         }
     }
+}*/
 }
-
 @Composable
-fun NewsItem(title: String,index: String) {
+fun NewsItem(article: Article) {
     Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-        Text(text = index)
+        Text(text = article.url ?: "")
         Spacer(modifier = Modifier.height(2.dp))
-        Text(text = title)
+        Text(text = article.title ?: "")
         Divider(color = Color.Gray)
     }
 }

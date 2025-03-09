@@ -10,26 +10,49 @@ import com.images.data.mappers.toArticleList
 import com.images.entity.Article
 import javax.inject.Inject
 
+
+class NewsPagingSource @Inject constructor(
+    private val newsServiceApi: NewsServiceApi
+
+) : CorePagingSource<Article, Unit>(
+    initialPage = 1,
+    query = Unit,
+    onError = { error ->
+        println("Error fetching news: ${error.message}")
+    },
+    fetch = { page, _ ->
+        val response = newsServiceApi.getEverythingNews(page = page, pageSize = 20)
+        if (response.status == "ok") {
+            response.articles.toArticleList()
+        } else {
+            throw Exception("API Error: ${response.status}")
+        }
+    }
+)
+
+/*
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 
 class NewsPagingSource @Inject constructor(
     private val newsServiceApi: NewsServiceApi
 ) : PagingSource<Int, Article>() {
-    /**
-     * The [PagingState] contains information about the current state of the data being loaded,
-     * including a list of pages that have already been loaded (pages), and it also keeps track
-     * of the anchor position (the current position of the item the user is interacting with
-     * in the list).
-     *
-     * The closest page refers to:
-     *
-     * [The page closest] to the anchor position: The current position in the list.
-     * This is important when refreshing or calculating which page should be loaded next or previous.
-     * The closestPageToPosition() function helps in calculating pagination keys,
-     * as it provides information on the current page relative to the anchor position
-     * (whether the user is scrolling up or down).
-     *
-     * */
+    */
+/**
+ * The [PagingState] contains information about the current state of the data being loaded,
+ * including a list of pages that have already been loaded (pages), and it also keeps track
+ * of the anchor position (the current position of the item the user is interacting with
+ * in the list).
+ *
+ * The closest page refers to:
+ *
+ * [The page closest] to the anchor position: The current position in the list.
+ * This is important when refreshing or calculating which page should be loaded next or previous.
+ * The closestPageToPosition() function helps in calculating pagination keys,
+ * as it provides information on the current page relative to the anchor position
+ * (whether the user is scrolling up or down).
+ *
+ * *//*
+
     // Function to determine the key for refreshing the data
     override fun getRefreshKey(state: PagingState<Int, Article>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -73,4 +96,4 @@ class NewsPagingSource @Inject constructor(
     }
 
 
-}
+}*/
