@@ -37,13 +37,6 @@ object NetworkModule {
     }
 
 
-    @Provides
-    fun provideAuthInterceptor(): AuthInterceptor {
-        return AuthInterceptor()
-    }
-
-
-
 
     @Provides
     fun provideOkHttp(
@@ -63,17 +56,7 @@ object NetworkModule {
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
-            .addInterceptor(
-             /*   // Setting the interceptor
-                ChuckerInterceptor.Builder(context)
-                    .collector(ChuckerCollector(context))
-                    .maxContentLength(250000L)
-                    .redactHeaders(emptySet())
-                    .alwaysReadResponseBody(false)
-                    .build()*/
-                chuckerInterceptor
-            )
-
+            .addInterceptor(chuckerInterceptor)
             .build()
     }
 
